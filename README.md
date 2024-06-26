@@ -27,6 +27,10 @@ Run php artisan migrate --seed (it has some seeded data)
 Run php artisan serve.
 Run php artisan test (it will perform UnitTest for APIs)
 That is it: launch the main URL and login with default credentials email - admin@example.com and Password - Vijay@123
+
+![image](https://github.com/Vijaypare7/user-management/assets/46006347/a7bc1161-b287-43dc-8f41-0c190b423828)
+
+
 ```
 
 ## API Endpoints
