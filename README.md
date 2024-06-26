@@ -23,6 +23,7 @@ Clone the repository with git clone
 Copy .env.example file to .env and edit database credentials there
 Run composer install
 Run php artisan key:generate
+For the database - see management.sql if faced any issues in migrations
 Run php artisan migrate --seed (it has some seeded data)
 Run php artisan serve.
 Run php artisan test (it will perform UnitTest for APIs)
