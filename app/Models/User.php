@@ -58,4 +58,31 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+            $query->where('name', $permission);
+        })->exists();
+    }
+
+    public function assignRole($role)
+    {
+        return $this->roles()->attach(Role::where('name', $role)->firstOrFail());
+    }
+
+    public function removeRole($role)
+    {
+        return $this->roles()->detach(Role::where('name', $role)->firstOrFail());
+    }
 }

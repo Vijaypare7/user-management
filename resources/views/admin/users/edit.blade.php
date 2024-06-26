@@ -1,27 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2>Edit User</h2>
-    <form method="POST" action="{{ route('admin.users.update', $user->id) }}">
-        @csrf
-        @method('PUT')
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
-        </div>
-        <div class="form-group">
-            <label for="role">Role</label>
-            <select class="form-control" id="role" name="role">
-                <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
-                <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Update User</button>
-    </form>
-</div>
+    <div class="container">
+        <h1>Edit User</h1>
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
+            </div>
+            <div class="form-group">
+                <label for="roles">Roles</label>
+                <select class="form-control" id="roles" name="roles[]" multiple>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}" {{ in_array($role->id, $user->roles->pluck('id')->toArray()) ? 'selected' : '' }}>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
 @endsection

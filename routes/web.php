@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AdminRoleController;
+use App\Http\Controllers\AdminPermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,9 @@ use App\Http\Controllers\Admin\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Authentication Routes...
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -35,15 +40,22 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset']);
 
 // Profile Routes
-
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile.show');
 Route::post('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->group(function () {
+
     Route::resource('users', UserController::class);
     Route::get('users/{id}/edit', 'UserController@edit')->name('admin.users.edit');
     Route::delete('users/{id}', 'UserController@destroy')->name('admin.users.destroy');
     Route::put('users/{id}', 'UserController@update')->name('admin.users.update');
+    Route::resource('admin/roles', AdminRoleController::class);
+    Route::resource('admin/permissions', AdminPermissionController::class);
+
+    // Route for assigning permissions to roles
+    Route::get('admin/roles/{role}/permissions', [AdminRoleController::class, 'showAssignPermissionsForm'])->name('admin.roles.permissions');
+    Route::post('admin/roles/{role}/permissions', [AdminRoleController::class, 'assignPermissions'])->name('admin.roles.permissions.assign');
+
 });
